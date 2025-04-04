@@ -174,7 +174,6 @@ function changeItemMenu(mixed $menuItem): void
         case 1:
             $words = file('russian_nouns.txt', FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
             $randomWord = $words[array_rand($words)];
-            echo $randomWord;
             startNewGame($randomWord);
 
             start();
