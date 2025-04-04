@@ -6,8 +6,8 @@
 неправильный ответ добавляется одна часть туловища к виселице. Игрок имеет 6 попыток.
 Если туловище в виселице нарисовано полностью, то игрок проиграл. Если игроку удаётся угадать слово, он выигрывает.
 
-Проект создан в рамках **Roadmap Сергея Жукова
-** -> [ссылка](https://zhukovsd.github.io/java-backend-learning-course/projects/hangman/)
+Проект создан в рамках **Roadmap Сергея Жукова**
+-> [ссылка](https://zhukovsd.github.io/java-backend-learning-course/projects/hangman/)
 
 
 <p align="center">
