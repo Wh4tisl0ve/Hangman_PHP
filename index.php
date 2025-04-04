@@ -52,6 +52,15 @@ function getHangmanState(int $hangmanState = 0): string
         "
       +---+
       |   |
+      O   |
+     /|\  |
+     / \  |
+          |
+    =========
+    " . PHP_EOL,
+        "
+      +---+
+      |   |
      [O]  |
      /|\  |
      / \  |
@@ -65,7 +74,7 @@ function getHangmanState(int $hangmanState = 0): string
 
 function showMenu(): void
 {
-    echo "Добро пожаловать!" . PHP_EOL;
+    echo "Меню:" . PHP_EOL;
     echo "1. Начать новую игру" . PHP_EOL;
     echo "2. Выход" . PHP_EOL;
 }
@@ -73,10 +82,27 @@ function showMenu(): void
 function showGameStatus(array $usedLetters, array $maskedWord, int $countErrors): void
 {
     echo "Статус игры: " . PHP_EOL;
-    echo getHangmanState($countErrors) . PHP_EOL;
+    echo getHangmanState($countErrors);
     echo "Использованные буквы:" . implode(',', $usedLetters) . PHP_EOL;
     echo "Загаданное слово:" . implode('', $maskedWord) . PHP_EOL;
     echo "Количество ошибок:" . $countErrors . PHP_EOL;
+    echo PHP_EOL;
+}
+
+function showGameResult(array $hiddenWord, int $countAttempts, int $countErrors): void
+{
+    if (isGameWin($countAttempts, $countErrors)) {
+        echo "==========================================" . PHP_EOL;
+        echo "Победа! Все буквы угаданы" . PHP_EOL;
+        echo "Количество ошибок: $countErrors" . PHP_EOL;
+        echo "==========================================" . PHP_EOL;
+        echo PHP_EOL;
+    } else {
+        echo "==========================================" . PHP_EOL;
+        echo "Ты проиграл! Загаданное слово:" . implode('', $hiddenWord) . PHP_EOL;
+        echo "==========================================" . PHP_EOL;
+        echo PHP_EOL;
+    }
 }
 
 function openLetter(array &$maskedWord, array $hiddenWord, string $letter): void
@@ -86,6 +112,16 @@ function openLetter(array &$maskedWord, array $hiddenWord, string $letter): void
             $maskedWord[$i] = $letter;
         }
     }
+}
+
+function isGameEnd(array $maskedWord, int $countAttempts, int $countErrors): bool
+{
+    return $countAttempts == $countErrors || !in_array("[*]", $maskedWord);
+}
+
+function isGameWin(int $countAttempts, int $countErrors): bool
+{
+    return $countAttempts > $countErrors;
 }
 
 function startNewGame(string $hiddenWord): void
@@ -98,7 +134,7 @@ function startNewGame(string $hiddenWord): void
 
     $usedLetters = [];
 
-    while ($countAttempts != $countErrors) {
+    while (!isGameEnd($maskedWord, $countAttempts, $countErrors)) {
         $userInput = mb_strtolower(readline("Введите букву-> "));
 
         if (!preg_match("/^[А-Яа-яЁё]+$/u", $userInput) || !(mb_strlen($userInput) == 1)) {
@@ -121,9 +157,11 @@ function startNewGame(string $hiddenWord): void
 
         showGameStatus($usedLetters, $maskedWord, $countErrors);
     }
+
+    showGameResult($hiddenWord, $countAttempts, $countErrors);
 }
 
-function start()
+function start(): void
 {
     showMenu();
     $menuItem = readline("Выберите пункт меню-> ");
@@ -136,8 +174,9 @@ function changeItemMenu(mixed $menuItem): void
         case 1:
             $words = file('russian_nouns.txt', FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
             $randomWord = $words[array_rand($words)];
-
+            echo $randomWord;
             startNewGame($randomWord);
+
             start();
             break;
         case 2:
